@@ -6,5 +6,7 @@ AD9833.c
 
 main.c
 
+serialF0.c
+
 SoftSpi.c
 

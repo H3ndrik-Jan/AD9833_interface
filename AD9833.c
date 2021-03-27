@@ -21,8 +21,10 @@ void initGenerator(WAVGEN_t *pWavgen){
 	pWavgen->_SLEEP1 = false;
 	pWavgen->_SLEEP12 = false;
 	
+	pWavgen->_FMCLK = 25000000UL;
 	
-	pWavgen->_CLKratio = pWavgen->_FMCLK/MAXDACVAL;
+	
+	pWavgen->_CLKratio = (double)pWavgen->_FMCLK/MAXDACVAL;
 	writeControlRegister(pWavgen);
 }
 
@@ -36,17 +38,25 @@ void setWaveform(WAVGEN_t *pWavgen, waveforms_t waveform){
 }
 
 void setFrequency(WAVGEN_t *pWavgen, uint32_t frequency){
- 	pWavgen->_frequencyRegister = frequency/pWavgen->_CLKratio;
+ 	pWavgen->_frequencyRegister = (uint32_t)frequency/pWavgen->_CLKratio;
+	 
+	 pWavgen->_FSELECT = true;
+	 writeControlRegister(pWavgen);
 	 softwareSpiWrite(0x4000 | (pWavgen->_frequencyRegister & 0x3FFF));	//LSB
-	 softwareSpiWrite(0x8000 | ((pWavgen->_frequencyRegister >> 14) & 0x3FFF));	//MSB
+	 softwareSpiWrite(0x4000 | ((pWavgen->_frequencyRegister >> 14) & 0x3FFF));	//MSB
+	softwareSpiWrite(0x8000 | (pWavgen->_frequencyRegister & 0x3FFF));	//LSB
+	softwareSpiWrite(0x8000 | ((pWavgen->_frequencyRegister >> 14) & 0x3FFF));	//MSB
+		pWavgen->_FSELECT = false;
+		writeControlRegister(pWavgen);
 }
 
 void writeControlRegister(WAVGEN_t *pWavgen){
-	pWavgen->_controlRegister = 0x0000 | (pWavgen->_mode << 1) | (pWavgen->_DIV2 << 3) |  
-										(pWavgen->_OPBITEN << 5) | (pWavgen->_SLEEP1 << 6) |
-										(pWavgen->_SLEEP12 << 7) | (pWavgen->_reset << 8) | 
-										(pWavgen->_PSELECT << 10) |(pWavgen->_FSELECT << 11) | 
-										(pWavgen->_HLB << 12) | (pWavgen->_B28BIT << 13);
+	pWavgen->_controlRegister = 0x0000 |
+	(pWavgen->_mode << 1) | (pWavgen->_DIV2 << 3) |
+	(pWavgen->_OPBITEN << 5) | (pWavgen->_SLEEP1 << 6) |
+	(pWavgen->_SLEEP12 << 7) | (pWavgen->_reset << 8) |
+	(pWavgen->_PSELECT << 10) |(pWavgen->_FSELECT << 11) |
+	(pWavgen->_HLB << 12) | (pWavgen->_B28BIT << 13);
 										
 	softwareSpiWrite(pWavgen->_controlRegister);
 }

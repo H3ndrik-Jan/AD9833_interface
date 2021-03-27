@@ -7,8 +7,8 @@
 #include <stdbool.h>
 #include "SoftSpi.h"
 
-#define WG_FMCLK 25000000
-#define MAXDACVAL 268435456
+#define WG_FMCLK 25000000UL
+#define MAXDACVAL 268435456UL
 
 typedef enum {
 	SINEWAVE, TRIANGLEWAVE, SQUAREWAVE
