@@ -10,6 +10,8 @@
 #define WG_FMCLK 25000000UL
 #define MAXDACVAL 268435456UL
 
+#define PHASEFORMULA 0.087890625
+
 typedef enum {
 	SINEWAVE, TRIANGLEWAVE, SQUAREWAVE
 	}waveforms_t;
@@ -33,6 +35,9 @@ typedef struct AD9833_struct
 	uint32_t _frequencyRegister;
 	uint32_t _freq;
 	
+	uint16_t _phaseRegister;
+	uint16_t _phase;
+	
 	uint32_t _FMCLK;
 	double _CLKratio;
 
@@ -42,4 +47,5 @@ typedef struct AD9833_struct
 void initGenerator(WAVGEN_t *pWavgen);
 void setWaveform(WAVGEN_t *pWavgen, waveforms_t waveform);
 void setFrequency(WAVGEN_t *pWavgen, uint32_t frequency);
+void setPhaseDegrees(WAVGEN_t *pWavgen, uint16_t phase);
 void writeControlRegister(WAVGEN_t *pWavgen);

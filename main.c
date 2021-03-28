@@ -14,8 +14,8 @@
 
 void initADC(void);
 
-#define AVGSAMPLES 100
-#define MAXMISMATCHES 250
+#define AVGSAMPLES 3
+#define MAXMISMATCHES 254
 
 int main(void)
 {
@@ -24,11 +24,11 @@ int main(void)
 	initGenerator(&ad9833);
 	setWaveform(&ad9833, TRIANGLEWAVE);
 	initADC();
-	
+	uint16_t phase = 0;
 	static uint16_t lastMeasurements[AVGSAMPLES];
+	setFrequency(&ad9833, 1);
     while (1) 
-    {
-		
+    {	
 		if((ADCA.CH0.INTFLAGS & ADC_CH_CHIF_bm)){
 			lastMeasurements[0] = ADCA.CH0.RES;
 			ADCA.CH0.INTFLAGS = ADC_CH_CHIF_bm;
