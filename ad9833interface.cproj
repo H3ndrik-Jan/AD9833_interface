@@ -143,9 +143,6 @@
     <Compile Include="main.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="serialF0.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="SoftSpi.c">
       <SubType>compile</SubType>
     </Compile>

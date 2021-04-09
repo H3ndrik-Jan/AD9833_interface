@@ -3,6 +3,9 @@
  *
  * Created: 27-3-2021 11:07:04
  * Author : Hendrik-Jan
+ *
+ *	VCO program for Xmega AU microcontrollers and an AD9833. The voltage over A0 is read and the DDS's frequency is set accordingly.
+ *
  */ 
 
 #define F_CPU 2000000UL
@@ -10,21 +13,25 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include "AD9833.h"
-#include "serialF0.h"
 
 void initADC(void);
 
-#define AVGSAMPLES 3
-#define MAXMISMATCHES 254
+// Clock frequency of the AD9833
+#define WG_FMCLK 25000000UL
+
+//some anti-jitter filter constants:
+#define AVGSAMPLES 200	 // Amount of samples the written DAC value will be based on
+#define MAXMISMATCHES 10 // Number of consecutive times the ADC sample is different from what is written to the DDS before a new frequency can be written to the DDS
 
 int main(void)
 {
 	_delay_ms(1);
 	WAVGEN_t ad9833;
-	initGenerator(&ad9833);
-	setWaveform(&ad9833, TRIANGLEWAVE);
+	initGenerator(&ad9833, WG_FMCLK);
 	initADC();
-	uint16_t phase = 0;
+	setWaveform(&ad9833, SINEWAVE);
+	setPhaseDegrees(&ad9833, 0);
+
 	static uint16_t lastMeasurements[AVGSAMPLES];
 	setFrequency(&ad9833, 1);
     while (1) 

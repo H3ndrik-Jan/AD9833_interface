@@ -3,9 +3,11 @@
  *
  * Created: 27-3-2021 11:43:13
  *  Author: Hendrik-Jan
+ *
+ *	Software SPI implementation for Xmega AU microcontrollers
  */
 #define F_CPU 2000000UL 
-#include <util/delay.h>
+
 #include "SoftSpi.h"
 
 void initSoftwareSpi(void){
@@ -23,7 +25,6 @@ void softwareSpiWrite(uint16_t data){
 		else SDATPORT.OUTCLR = SDATPIN;
 		
 		SCLKPORT.OUTCLR = SCLKPIN;
-		_delay_us(1);
 		SCLKPORT.OUTSET = SCLKPIN;
 	}
 	FSYNCPORT.OUTSET = FSYNCPIN;

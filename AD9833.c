@@ -4,10 +4,10 @@
  * Created: 27-3-2021 11:39:50
  *  Author: Hendrik-Jan
  */ 
-#include <math.h>
+
 #include "AD9833.h"
 
-void initGenerator(WAVGEN_t *pWavgen){
+void initGenerator(WAVGEN_t *pWavgen, uint32_t f_clk){
 	initSoftwareSpi();
 	pWavgen->_controlRegister = 0; 
 	pWavgen->_B28BIT = true;
@@ -23,9 +23,9 @@ void initGenerator(WAVGEN_t *pWavgen){
 	
 	pWavgen->_freq = 1000;
 	pWavgen->_phase = 0;
-	pWavgen->_FMCLK = 25000000UL;
+	pWavgen->_FMCLK = f_clk;
 	
-	pWavgen->_CLKratio = (double)pWavgen->_FMCLK/MAXDACVAL;
+	pWavgen->_CLKratio = (double)pWavgen->_FMCLK/DDS_HORIZONTAL_RES;
 	writeControlRegister(pWavgen);
 }
 

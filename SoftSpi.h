@@ -3,6 +3,8 @@
  *
  * Created: 27-3-2021 11:43:22
  *  Author: Hendrik-Jan
+ *
+ *	Software SPI implementation for Xmega AU microcontrollers
  */ 
 #include <avr/io.h>
 #define FSYNCPIN PIN2_bm
